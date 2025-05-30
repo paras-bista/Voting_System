@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(120deg, #f0f2f5 0%, #e0e7ef 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .btn-secondary {
+    background: linear-gradient(90deg, #6c757d 70%, #495057 100%);
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    font-weight: 600;
+    padding: 8px 18px;
+    transition: background 0.2s, transform 0.2s;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.13);
+  }
+  .btn-secondary:hover, .btn-secondary:focus {
+    background: linear-gradient(90deg, #495057 70%, #6c757d 100%);
+    transform: translateY(-2px) scale(1.05);
+    color: #fff;
+    text-decoration: none;
+  }
+  h1.text-center {
+    font-size: 2.3rem;
+    color: #2d3a4a;
+    font-weight: 700;
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+  }
+  .alert-danger {
+    background: #ffe6e6;
+    color: #b71c1c;
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-bottom: 24px;
+    font-weight: 600;
+    border: 1px solid #ffb3b3;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  form {
+    max-width: 520px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(44, 62, 80, 0.10), 0 1.5px 4px rgba(44, 62, 80, 0.07);
+    padding: 36px 30px 30px 30px;
+    margin-top: 10px;
+  }
+  .form-check {
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+  }
+  .form-check-input[type="radio"] {
+    accent-color: #28a745;
+    width: 22px;
+    height: 22px;
+    margin-right: 12px;
+    margin-top: 0;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+    box-shadow: 0 1px 4px rgba(40, 167, 69, 0.10);
+  }
+  .form-check-label {
+    font-size: 1.12rem;
+    color: #343a40;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .btn-success {
+    width: 100%;
+    padding: 14px 0;
+    font-size: 1.13rem;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #28a745 70%, #218838 100%);
+    color: #fff;
+    border: none;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.10);
+    margin-top: 30px;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-success:hover, .btn-success:focus {
+    background: linear-gradient(90deg, #218838 70%, #28a745 100%);
+    transform: translateY(-2px) scale(1.03);
+    color: #fff;
+    text-decoration: none;
+  }
+  @media (max-width: 600px) {
+    h1.text-center {
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+    }
+    form {
+      padding: 18px 6px 14px 6px;
+      max-width: 99vw;
+    }
+    .btn-success {
+      font-size: 1rem;
+      padding: 10px 0;
+      margin-top: 18px;
+    }
+    .form-check-label {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<a class="btn btn-secondary btn-sm mb-3" href="{% url 'polls:index' %}">Back To Polls</a>
+<h1 class="text-center mb-3">{{ question.question_text }}</h1>
+
+{% if error_message %}
+<p class="alert alert-danger">
+    <strong>{{ error_message }}</strong>
+</p>
+{% endif %}
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+    {% csrf_token %}
+    {% for choice in question.choice_set.all %}
+    <div class="form-check">
+        <input type="radio" name="choice" class="form-check-input" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+        <label class="form-check-label" for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+    </div>
+    {% endfor %}
+    <input type="submit" value="Vote" class="btn btn-success btn-lg btn-block mt-4">
+</form>
+
+{% endblock %}
